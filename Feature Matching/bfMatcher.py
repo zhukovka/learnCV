@@ -3,9 +3,9 @@ import cv2 as cv
 import matplotlib.pyplot as plt
 
 MIN_MATCH_COUNT = 10
-img1 = cv.imread('objects1.jpg', 0)  # queryImage
+img1 = cv.imread('/Users/lenka/Documents/openCVTest/images/kpi1.jpg', 0)  # queryImage
 # gray_img1 = cv.cvtColor(img1, cv.COLOR_BGR2GRAY)
-img2 = cv.imread('objects7.jpg', 0)  # trainImage
+img2 = cv.imread('/Users/lenka/Documents/openCVTest/images/kpi2.jpg', 0)  # trainImage
 # gray_img2 = cv.cvtColor(img2, cv.COLOR_BGR2GRAY)
 
 # Initiate SIFT detector
@@ -41,4 +41,6 @@ draw_params = dict(matchColor=(0, 255, 0),  # draw matches in green color
                    singlePointColor=None,
                    flags=2)
 img3 = cv.drawMatches(img1, kp1, img2, kp2, good, None, **draw_params)
+# img3 = cv.drawKeypoints(img1, kp1, None, flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+# cv.imwrite('sift_keypoints.jpg', img3)
 plt.imshow(img3, 'gray'), plt.show()

@@ -2,9 +2,9 @@ import cv2 as cv
 import matplotlib.pyplot as plt
 
 MIN_MATCH_COUNT = 10
-img1 = cv.imread('objects1.jpg', 0)  # queryImage
+img1 = cv.imread('church1.jpg', 0)  # queryImage
 # gray_img1 = cv.cvtColor(img1, cv.COLOR_BGR2GRAY)
-img2 = cv.imread('objects7.jpg', 0)  # trainImage
+img2 = cv.imread('church2.jpg', 0)  # trainImage
 # gray_img2 = cv.cvtColor(img2, cv.COLOR_BGR2GRAY)
 
 # Initiate SIFT detector

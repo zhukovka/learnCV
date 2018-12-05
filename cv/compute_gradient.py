@@ -1,15 +1,20 @@
-from typing import Any
-
-import numpy as np
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-import cv2
 import math
+
+import cv2
+import matplotlib.pyplot as plt
+import numpy as np
 
 # load an image
 star = cv2.imread('star.png', 0)
 # Convert to normalized floating point
 star = cv2.normalize(star.astype('float'), None, 0.0, 1.0, cv2.NORM_MINMAX)
+
+
+def grad_1d(v: np.ndarray) -> np.ndarray:
+    g_x = np.zeros(len(v))
+    for x in range(len(v) - 1):
+        g_x[x] = v[x + 1] - v[x]
+    return g_x
 
 
 def grad():
@@ -85,30 +90,69 @@ def angles(g_x: np.ndarray, g_y: np.ndarray) -> np.ndarray:
 
 grad_x, grad_y = grad()
 grad_xy = grad_x + grad_y
-# plot_grad()
 
 mag = magnitude(grad_x, grad_y)
+
+
 # plt.imshow(mag, cmap='gray')
 # plt.imsave('star_edges.png', mag, cmap='gray')
 # plt.show()
 
-directions = angles(grad_x, grad_y)
-plt.imshow(directions, cmap='gray')
-#
-# X : 1D or 2D array, sequence, optional
-# The x coordinates of the arrow locations
-#
-# Y : 1D or 2D array, sequence, optional
-# The y coordinates of the arrow locations
-#
-# U : 1D or 2D array or masked array, sequence
-# The x components of the arrow vectors
-#
-# V : 1D or 2D array or masked array, sequence
-# The y components of the arrow vectors
-U = mag * np.cos(directions)
-V = mag * np.sin(directions)
+def plot_directions(x: np.ndarray, y: np.ndarray):
+    directions = angles(x, y)
+    plt.imshow(directions, cmap='gray')
+    #
+    # X : 1D or 2D array, sequence, optional
+    # The x coordinates of the arrow locations
+    #
+    # Y : 1D or 2D array, sequence, optional
+    # The y coordinates of the arrow locations
+    #
+    # U : 1D or 2D array or masked array, sequence
+    # The x components of the arrow vectors
+    #
+    # V : 1D or 2D array or masked array, sequence
+    # The y components of the arrow vectors
+    U = mag * np.cos(directions)
+    V = mag * np.sin(directions)
+    plt.quiver(U, V)
+    # plt.imsave('star_directions.png', cmap='gray')
+    plt.show()
 
-plt.quiver(U, V)
-plt.imsave('star_directions.png', cmap='gray')
-plt.show()
+
+def add_noise(img: object, mean: float = 0, sigma: float = 0) -> object:
+    im = np.zeros(img.shape, np.float)
+    cv2.randn(im, mean, sigma)  # create the random distribution
+    return cv2.add(img, im)  # add the noise to the original image
+
+
+def plot_noise(img: object):
+    noise1 = add_noise(img, sigma=0.1)
+    noise5 = add_noise(img, sigma=0.5)
+    grad0 = grad_1d(img[20])
+    grad1 = grad_1d(noise1[20])
+    grad2 = grad_1d(noise5[20])
+
+    plt.subplot(2, 3, 1), plt.imshow(img, cmap='gray')
+    plt.title('Original'), plt.xticks([]), plt.yticks([])
+
+    plt.subplot(2, 3, 2), plt.imshow(noise1, cmap='gray')
+    plt.title('Noise sigma 0.1'), plt.xticks([]), plt.yticks([])
+
+    plt.subplot(2, 3, 3), plt.imshow(noise5, cmap='gray')
+    plt.title('Noise sigma 0.5'), plt.xticks([]), plt.yticks([])
+
+    plt.subplot(2, 3, 4), plt.plot(grad0)
+    plt.title('Gradient no noise')
+
+    plt.subplot(2, 3, 5), plt.plot(grad1)
+    plt.title('Gradient noise 0.1')
+
+    plt.subplot(2, 3, 6), plt.plot(grad2)
+    plt.title('Gradient noise 0.5')
+
+    plt.show()
+
+
+# plot_noise(star)
+plot_directions(grad_x, grad_y)
