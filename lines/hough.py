@@ -20,6 +20,14 @@ for line in lines:
 
         cv2.line(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
 
+# Probabilistic Line Transform
+# minLinLength: The minimum number of points that can form a line.
+# Lines with less than this number of points are disregarded.
+minLineLength = 20
+# maxLineGap: The maximum gap between two points to be considered in the same line.
+maxLineGap = 50
+# linesP = cv2.HoughLinesP(edges, 1, deg * np.pi / 180, threshold, None, minLineLength, maxLineGap)
+
 plt.subplot(2, 2, 1), plt.imshow(img, cmap='gray')
 # plt.subplot(2, 2, 2), plt.imshow(img, cmap='gray')
 plt.show()
